@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MindShiftSL — Unity Tools &amp; Games</title>
+  <meta name="description" content="MindShiftSL builds monetization, integration and UI tools for Unity 6 — clean APIs, polish and developer experience." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #eef2f7;
+      --bg-2:       #e3eaf2;
+      --surface:    #ffffff;
+      --surface-2:  #f5f8fc;
+      --border:     #dbe3ec;
+      --border-2:   #c9d4e0;
+      --brand:      #16537e;
+      --brand-2:    #1f6ba3;
+      --brand-lo:   #16537e12;
+      --accent:     #f26a1b;
+      --accent-2:   #f8961d;
+      --ink:        #17242f;
+      --ink-2:      #33454f;
+      --muted:      #5f7180;
+      --mono:       'JetBrains Mono', monospace;
+      --display:    'Space Grotesk', sans-serif;
+      --body:       'Inter', sans-serif;
+      --shadow:     0 1px 2px rgba(22,42,60,.05), 0 8px 28px rgba(22,42,60,.07);
+      --shadow-lg:  0 12px 48px rgba(22,42,60,.16);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background:
+        radial-gradient(1100px 620px at 78% -8%, #ffffff 0%, rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      background-attachment: fixed;
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.65;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 28px; }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(238,242,247,.82);
+      backdrop-filter: saturate(160%) blur(14px);
+      -webkit-backdrop-filter: saturate(160%) blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand img { height: 40px; width: auto; display: block; }
+    .brand-name {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--brand);
+      line-height: 1;
+    }
+    .brand-name small {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .btn {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      font-weight: 500;
+      padding: 11px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      box-shadow: 0 6px 16px rgba(242,106,27,.28);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(242,106,27,.34); }
+
+    /* ── HERO ── */
+    .hero { padding: 74px 0 44px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--brand-2);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: var(--brand-lo);
+      border: 1px solid #16537e26;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+    }
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(36px, 6.5vw, 58px);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(100deg, var(--brand-2) 10%, var(--accent) 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 18px);
+      color: var(--ink-2);
+      max-width: 540px;
+      line-height: 1.65;
+    }
+
+    /* ── SECTIONS ── */
+    .section { padding: 24px 0 40px; }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── ASSET CARDS ── */
+    .asset-list { display: grid; gap: 16px; }
+    .asset-card {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 26px 30px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .asset-card:hover {
+      border-color: var(--brand-2);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+    }
+    .asset-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .asset-name {
+      font-family: var(--display);
+      font-size: 21px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 11px;
+      border-radius: 6px;
+      background: var(--brand-lo);
+      color: var(--brand);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .asset-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .asset-price { color: var(--accent); font-weight: 500; }
+    .asset-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-2); }
+    .asset-desc { color: var(--ink-2); font-size: 14.5px; line-height: 1.65; margin-bottom: 18px; }
+    .asset-foot { display: flex; align-items: center; justify-content: flex-end; gap: 14px; flex-wrap: wrap; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--brand);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 3px 9px;
+      border-radius: 5px;
+    }
+    .go {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+    @media (max-width: 520px) { .about-grid { grid-template-columns: 1fr; } }
+    .about-item-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .about-item-value { font-size: 15px; color: var(--ink); }
+
+    /* ── CONTACT ── */
+    .contact-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+    .contact-title { font-family: var(--display); font-size: 19px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .contact-sub { font-size: 13.5px; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); background: rgba(255,255,255,.5); margin-top: 24px; }
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 26px;
+      padding-bottom: 26px;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 10px; }
+    .footer-brand img { height: 28px; }
+    .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .footer-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; }
+    .footer-link:hover { color: var(--brand); }
+
+    @media (max-width: 480px) {
+      .hero { padding: 48px 0 32px; }
+      .asset-card { padding: 22px 22px; }
+      .asset-header { flex-direction: column; align-items: flex-start; }
+      .contact-block { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <a class="brand" href="index.html">
+        <img src="Logo_MS_Light.svg" alt="MindShiftSL logo" />
+        <span class="brand-name">MindShiftSL</span>
+      </a>
+      <a class="btn btn-primary" href="https://assetstore.unity.com/publishers/142874" target="_blank" rel="noopener">Unity Asset Store →</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <span class="eyebrow">Unity Tools &amp; Games</span>
+        <h1>Tools that make<br /><em>Unity feel better</em></h1>
+        <p class="hero-sub">
+          Monetization, integration and UI tools for Unity&nbsp;6 — built around clean APIs,
+          polish and developer experience.
+        </p>
+      </div>
+    </section>
+
+    <!-- PUBLISHED ASSETS -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">Published Assets</p>
+        <div class="asset-list">
+
+          <a class="asset-card" href="https://assetstore.unity.com/packages/tools/integration/monetization-ya-asynciap-373190" target="_blank" rel="noopener">
+            <div class="asset-header">
+              <span class="asset-name">Monetization Ya.AsyncIAP</span>
+              <span class="badge">Tools · Integration</span>
+            </div>
+            <div class="asset-meta">
+              <span>Unity 6.0+</span>
+            </div>
+            <p class="asset-desc">
+              A modern in-app purchase layer for Unity built around async/await. Clean, awaitable IAP
+              flows for products and subscriptions with server-side receipt validation for Google Play
+              and the App Store. Ships with dependency injection support for VContainer and Zenject.
+              Compatible with Built-in, URP and HDRP.
+            </p>
+            <div class="asset-foot">
+              <span class="go">Unity Asset Store →</span>
+            </div>
+          </a>
+
+          <a class="asset-card" href="https://assetstore.unity.com/packages/tools/localization/ya-localization-376460" target="_blank" rel="noopener">
+            <div class="asset-header">
+              <span class="asset-name">Ya.Localization</span>
+              <span class="badge">Tools · Localization</span>
+            </div>
+            <div class="asset-meta">
+              <span>Unity 6.0+</span>
+            </div>
+            <p class="asset-desc">
+              A lightweight localization system for Unity 6. Manage multi-language translations from CSV
+              or Google Sheets, load strings through Addressables, and bind them directly in the UI Toolkit.
+              Compatible with Built-in, URP and HDRP.
+            </p>
+            <div class="asset-foot">
+              <span class="go">Unity Asset Store →</span>
+            </div>
+          </a>
+
+          <a class="asset-card" href="ya-living-glass/index.html">
+            <div class="asset-header">
+              <span class="asset-name">Ya.LivingGlass</span>
+              <span class="badge">UI Toolkit</span>
+            </div>
+            <div class="asset-meta">
+              <span>Unity 6.0+</span>
+              <span class="dot"></span>
+              <span>Built-in · URP · HDRP</span>
+              <span class="dot"></span>
+              <span>Live demo</span>
+            </div>
+            <p class="asset-desc">
+              Glassmorphism &amp; liquid glass effects for the Unity 6 UI Toolkit. Dual-Kawase blur,
+              SDF water droplets with capillary waves, refraction, caustics and chromatic aberration —
+              six quality tiers, 30+ presets and 33 themes across all three render pipelines.
+            </p>
+            <div class="asset-foot">
+              <span class="go">Open page &amp; live demo →</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">About</p>
+        <div class="about-grid">
+          <div class="about-item">
+            <p class="about-item-label">Studio</p>
+            <p class="about-item-value">MindShiftSL</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">Contact</p>
+        <div class="contact-block">
+          <div class="contact-text">
+            <p class="contact-title">Get in touch</p>
+            <p class="contact-sub">Questions, support or licensing — write directly.</p>
+          </div>
+          <a class="btn btn-primary" href="mailto:mindshiftsl@mindshiftsl.com">mindshiftsl@mindshiftsl.com</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-brand">
+        <img src="Logo_MS_Light.svg" alt="MindShiftSL logo" />
+        <span class="footer-copy">© 2026 MindShiftSL</span>
+      </div>
+      <a class="footer-link" href="https://assetstore.unity.com/publishers/142874" target="_blank" rel="noopener">Unity Asset Store →</a>
+    </div>
+  </footer>
+
+</body>
+</html>

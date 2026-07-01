@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ya.LivingGlass — Liquid glass UI for Unity 6 UI Toolkit</title>
+  <meta name="description" content="A tactile UI layer for Unity 6 UI Toolkit. Refraction, ripples, waves, hover-magnet and 30+ presets across Built-in, URP and HDRP." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #eef2f7;
+      --bg-2:       #e3eaf2;
+      --surface:    #ffffff;
+      --surface-2:  #f5f8fc;
+      --border:     #dbe3ec;
+      --border-2:   #c9d4e0;
+      --brand:      #16537e;   /* deep blue from logo */
+      --brand-2:    #1f6ba3;
+      --brand-lo:   #16537e12;
+      --accent:     #f26a1b;   /* orange from logo */
+      --accent-2:   #f8961d;
+      --ink:        #17242f;
+      --ink-2:      #33454f;
+      --muted:      #5f7180;
+      --mono:       'JetBrains Mono', monospace;
+      --display:    'Space Grotesk', sans-serif;
+      --body:       'Inter', sans-serif;
+      --shadow:     0 1px 2px rgba(22,42,60,.05), 0 8px 28px rgba(22,42,60,.07);
+      --shadow-lg:  0 12px 48px rgba(22,42,60,.16);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background:
+        radial-gradient(1100px 620px at 78% -8%, #ffffff 0%, rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      background-attachment: fixed;
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.65;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(238,242,247,.82);
+      backdrop-filter: saturate(160%) blur(14px);
+      -webkit-backdrop-filter: saturate(160%) blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand img { height: 40px; width: auto; display: block; }
+    .brand-name {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--brand);
+      line-height: 1;
+    }
+    .brand-name small {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      font-weight: 500;
+      padding: 11px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      box-shadow: 0 6px 16px rgba(242,106,27,.28);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(242,106,27,.34); }
+    .btn-ghost {
+      color: var(--brand);
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+    }
+    .btn-ghost:hover { border-color: var(--brand-2); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero { padding: 60px 0 30px; text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--brand-2);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: var(--brand-lo);
+      border: 1px solid #16537e26;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+    }
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(38px, 6vw, 66px);
+      font-weight: 700;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    h1 .liquid {
+      background: linear-gradient(100deg, var(--brand-2) 10%, var(--accent) 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 19px);
+      color: var(--ink-2);
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── DEMO ── */
+    .demo-wrap { padding: 34px 0 10px; }
+    .demo-stage {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #0e141b;
+      border: 1px solid var(--border-2);
+      box-shadow: var(--shadow-lg);
+      --s: 1;
+    }
+    .demo-stage iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 960px;
+      height: 600px;
+      border: 0;
+      transform-origin: top left;
+      transform: scale(var(--s));
+    }
+    .demo-poster {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      cursor: pointer;
+      background:
+        linear-gradient(180deg, rgba(14,20,27,.28), rgba(14,20,27,.52)),
+        url("b696148b-45cb-4130-a04a-3a78adafa49e_orig.png") center/cover no-repeat;
+      color: #fff;
+      transition: opacity .35s ease;
+    }
+    .demo-poster .play {
+      width: 78px; height: 78px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 30px rgba(242,106,27,.45);
+      transition: transform .2s ease;
+    }
+    .demo-poster:hover .play { transform: scale(1.06); }
+    .demo-poster .play svg { width: 30px; height: 30px; margin-left: 4px; fill: #fff; }
+    .demo-poster .play-label {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 21px;
+      letter-spacing: -0.01em;
+    }
+    .demo-poster .play-hint {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: .85;
+    }
+    .demo-caption {
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 16px;
+    }
+
+    /* ── MAIN GRID: text + gallery ── */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+      gap: 48px;
+      padding: 46px 0 80px;
+      align-items: start;
+    }
+
+    .prose h2 {
+      font-family: var(--display);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 40px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .prose h2:first-child { margin-top: 0; }
+    .lead {
+      font-size: 18px;
+      color: var(--ink-2);
+      line-height: 1.7;
+    }
+    .lead strong { color: var(--ink); font-weight: 600; }
+    .prose p { color: var(--ink-2); margin-bottom: 16px; }
+    .prose code {
+      font-family: var(--mono);
+      font-size: 0.88em;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 5px;
+      color: var(--brand);
+    }
+
+    /* feature list */
+    .features { display: grid; gap: 14px; }
+    .feature {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      transition: border-color .18s ease, transform .18s ease;
+    }
+    .feature:hover { border-color: var(--border-2); transform: translateY(-2px); }
+    .feature-title {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .feature-title .mono {
+      font-family: var(--mono);
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .feature p { font-size: 14.5px; color: var(--ink-2); margin: 0; line-height: 1.6; }
+
+    /* what you get list */
+    .get-list { display: grid; gap: 12px; counter-reset: g; }
+    .get-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .get-item .num {
+      counter-increment: g;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      background: linear-gradient(180deg, var(--brand-2), var(--brand));
+      width: 26px; height: 26px;
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+    }
+    .get-item .num::before { content: counter(g); }
+    .get-item p { margin: 0; font-size: 14.5px; color: var(--ink-2); line-height: 1.6; }
+    .get-item strong { color: var(--ink); font-weight: 600; }
+
+    /* preset chips */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .chip {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--brand);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 5px 11px;
+      border-radius: 999px;
+    }
+
+    /* spec table */
+    .spec {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .spec-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 16px;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14.5px;
+    }
+    .spec-row:last-child { border-bottom: 0; }
+    .spec-row .k {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+    .spec-row .v { color: var(--ink); }
+
+    .cta-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    /* ── GALLERY (right rail) ── */
+    .gallery {
+      position: sticky;
+      top: 92px;
+      display: grid;
+      gap: 16px;
+    }
+    .gallery-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .shot {
+      display: block;
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      cursor: zoom-in;
+      background: var(--surface);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .shot:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--border-2); }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 4vmin;
+      background: rgba(15,22,30,.86);
+      backdrop-filter: blur(6px);
+      cursor: zoom-out;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 96vw;
+      max-height: 92vh;
+      border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.5);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 22px; right: 26px;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.3);
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,.5);
+    }
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-top: 26px;
+      padding-bottom: 26px;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 10px; }
+    .footer-brand img { height: 30px; }
+    .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--brand); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; gap: 40px; }
+      .gallery { position: static; }
+      .brand-name small { display: none; }
+    }
+    @media (max-width: 560px) {
+      .container { padding: 0 18px; }
+      .hero { padding: 40px 0 20px; }
+      .header-actions .btn-ghost { display: none; }
+      .spec-row { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <a class="brand" href="../index.html">
+        <img src="../Logo_MS_Light.svg" alt="MindShiftSL logo" />
+        <span class="brand-name">MindShiftSL</span>
+      </a>
+      <div class="header-actions">
+        <a class="btn btn-ghost" href="../index.html">← All products</a>
+        <a class="btn btn-primary" href="https://assetstore.unity.com/publishers/142874" target="_blank" rel="noopener">Unity Asset Store →</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <span class="eyebrow">Unity 6 · UI Toolkit</span>
+        <h1>Ya.<span class="liquid">LivingGlass</span></h1>
+        <p class="hero-sub">
+          A tactile UI layer for the Unity&nbsp;6 UI Toolkit. Buttons ripple under the finger,
+          breathe on idle, bulge toward a hovering cursor and spring back on release.
+        </p>
+      </div>
+    </section>
+
+    <!-- LIVE DEMO -->
+    <section class="demo-wrap">
+      <div class="container">
+        <div class="demo-stage" id="demoStage">
+          <div class="demo-poster" id="demoPoster">
+            <div class="play">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="play-label">Launch the live demo</div>
+            <div class="play-hint">Runs in your browser · WebGL</div>
+          </div>
+        </div>
+        <p class="demo-caption">Interactive build — click, hover and drag the elements</p>
+      </div>
+    </section>
+
+    <!-- CONTENT + GALLERY -->
+    <section class="container">
+      <div class="layout">
+
+        <!-- LEFT: text -->
+        <div class="prose">
+          <p class="lead">
+            Refraction picks up the scene behind the UI; edge waves trace the rim of every droplet.
+            Disable the dynamics and the same element falls back to polished static glass.
+            <strong>Every effect is independently toggleable.</strong>
+          </p>
+
+          <h2>What you get</h2>
+          <div class="get-list">
+            <div class="get-item">
+              <span class="num"></span>
+              <p><strong>Full living component.</strong> Refraction, rim, inner shadow, chromatic aberration,
+                 drop shadow, variable backdrop blur, tap ripples, edge &amp; surface waves, drifting highlights,
+                 hover-magnet, press scale and scene-aware lighting.</p>
+            </div>
+            <div class="get-item">
+              <span class="num"></span>
+              <p><strong>YaLivingGlass</strong> — the full liquid-glass component (refraction, rim, inner shadow,
+                 chromatic aberration, drop shadow) plus live effects like waves and a magnet. Extensive
+                 customization lets you style the interface for any game.</p>
+            </div>
+            <div class="get-item">
+              <span class="num"></span>
+              <p><strong>YaBlur</strong> — a cheaper, backdrop-only element for surfaces that don't need
+                 refraction (Gaussian and Dual Kawase blur).</p>
+            </div>
+            <div class="get-item">
+              <span class="num"></span>
+              <p><strong>YaPlain</strong> — the lightest of the four: shadow + gradient overlay on a plain
+                 <code>VisualElement</code>, with no backdrop capture and no compositor RT.</p>
+            </div>
+            <div class="get-item">
+              <span class="num"></span>
+              <p><strong>Ready-to-use UI components</strong> — Button, Selector (Menu), Tab Bar, Dropdown,
+                 Slider and Switch.</p>
+            </div>
+            <div class="get-item">
+              <span class="num"></span>
+              <p><strong>30+ presets</strong> spanning glass, materials and game FX — style below.</p>
+            </div>
+          </div>
+
+          <div class="chips">
+            <span class="chip">Water</span><span class="chip">Glass</span><span class="chip">Abyss</span>
+            <span class="chip">Aurora</span><span class="chip">Cosmic</span><span class="chip">Crystal</span>
+            <span class="chip">CyberShield</span><span class="chip">Ember</span><span class="chip">Emerald</span>
+            <span class="chip">Fire</span><span class="chip">Honey</span><span class="chip">Ink</span>
+            <span class="chip">Jelly</span><span class="chip">Lacquer</span><span class="chip">Lava</span>
+            <span class="chip">Lens</span><span class="chip">Mirage</span><span class="chip">Mirror</span>
+            <span class="chip">Neon</span><span class="chip">Obsidian</span><span class="chip">Pearl</span>
+            <span class="chip">Plasma</span><span class="chip">Quicksilver</span><span class="chip">Rainbow</span>
+            <span class="chip">Sakura</span><span class="chip">Singularity</span><span class="chip">Slime</span>
+            <span class="chip">Smoke</span><span class="chip">SoapBubble</span><span class="chip">Storm</span>
+            <span class="chip">Sunset</span><span class="chip">Toxic</span><span class="chip">Velvet</span>
+          </div>
+
+          <h2>Built for real UI</h2>
+          <div class="features">
+            <div class="feature">
+              <div class="feature-title">Image inside the glass</div>
+              <p>Assign any texture, sprite or RenderTexture as the element's <code>background-image</code> and it
+                 appears beneath the water surface — refracted by the spherical cap, pulled by chromatic aberration
+                 and blurred in lockstep with the scene backdrop. Icons, photos, gradients: anything you place warps
+                 with the component.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-title">Per-element knobs</div>
+              <p>Tint, refraction strength, glass depth, rim color and width, inner shadow, chromatic aberration,
+                 per-element blur radius, waves, ripples and light — every parameter is a UXML attribute, editable
+                 live in UI Builder.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-title">Drop shadow built in</div>
+              <p>An alpha-zero shadow color disables the effect entirely, so non-shadowed elements pay no GPU cost.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-title">Six quality tiers</div>
+              <p>Low, Lite, Medium, High, Ultra and Auto tune the effect to the target device — the blur runs fine
+                 even on mobile.</p>
+            </div>
+          </div>
+
+          <h2>Requirements</h2>
+          <div class="spec">
+            <div class="spec-row"><span class="k">Unity</span><span class="v">Unity 6000.0 or newer</span></div>
+            <div class="spec-row"><span class="k">Pipelines</span><span class="v">URP 17.0.0+, HDRP 17.0.0+ or Built-in</span></div>
+            <div class="spec-row"><span class="k">Platforms</span><span class="v">Mobile · PC · WebGL · Consoles</span></div>
+            <div class="spec-row"><span class="k">UI system</span><span class="v">UI Toolkit only (Canvas not supported) · no VR</span></div>
+          </div>
+
+          <div class="cta-inline">
+            <a class="btn btn-primary" href="https://assetstore.unity.com/publishers/142874" target="_blank" rel="noopener">Get it on the Unity Asset Store →</a>
+            <a class="btn btn-ghost" href="../index.html">← All products</a>
+          </div>
+        </div>
+
+        <!-- RIGHT: gallery -->
+        <aside class="gallery">
+          <p class="gallery-label">Screenshots</p>
+          <!-- Order mirrors the itch.io page; the last three are local-only extras -->
+          <img class="shot" loading="lazy" src="a2314ea5-a01c-4059-b687-c0bdd1037b26_orig.png" alt="Advanced optics — Lens, Mirror, Quicksilver, Honey, Crystal, Pearl, Soap Bubble" />
+          <img class="shot" loading="lazy" src="c50c5b51-1cf0-4fe6-92d8-451779b4da9f_orig.png" alt="Living materials — Water, Jelly, Slime, Mirage, Smoke, Fire, Lava, Ember" />
+          <img class="shot" loading="lazy" src="71ddd7f2-22d3-4778-bf33-4fa18b231733_orig.png" alt="Game FX & themes — Plasma, Pixel, Toxic, Cyber Shield, Aurora, Cosmic, Rainbow, Sunset" />
+          <img class="shot" loading="lazy" src="b696148b-45cb-4130-a04a-3a78adafa49e_orig.png" alt="Liquid Glass — from clear to frosted" />
+          <img class="shot" loading="lazy" src="c9a882cf-18cb-40c9-9d7a-990ee19f15fe_orig.png" alt="Gradient — vibrant depth for modern UI" />
+          <img class="shot" loading="lazy" src="b0f17a3b-c38b-42ba-92f8-c80207cee456_orig.png" alt="Drop & inner shadows" />
+          <img class="shot" loading="lazy" src="08ba0a54-e12c-46cc-986f-b6fe1f2c84ad_orig.png" alt="Waves & ripples — idle waves at rest, tap fires a ripple" />
+          <img class="shot" loading="lazy" src="9096319a-0c38-4858-991f-ca6b8c699c41_orig.png" alt="Standalone blur component" />
+          <img class="shot" loading="lazy" src="4aae1f2c-1558-4a9f-a91d-1c6d4ed3a38b_orig.png" alt="Magnet — components follow the cursor" />
+          <img class="shot" loading="lazy" src="80835a97-f037-4c7b-b3a9-734eecf539b0_orig.png" alt="More depth — image under glass / water" />
+          <img class="shot" loading="lazy" src="6d34ca4f-4b12-4f92-b4e5-35c24213833a_orig.png" alt="UI components — Menu, Tab Bar, Slider, Switch, Dropdown, Button" />
+          <img class="shot" loading="lazy" src="b7c44b09-0dfe-467a-a3d4-fda313aca044_orig.png" alt="30+ ready-to-use themes for every UI component" />
+          <img class="shot" loading="lazy" src="3e5a7b1e-9724-4593-a774-53dbb19e27dd_orig.png" alt="Your own style — highly customizable and flexible options" />
+        </aside>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-brand">
+        <img src="../Logo_MS_Light.svg" alt="MindShiftSL logo" />
+        <span class="footer-copy">© 2026 MindShiftSL</span>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html">All products</a>
+        <a href="https://assetstore.unity.com/publishers/142874" target="_blank" rel="noopener">Unity Asset Store</a>
+        <a href="mailto:mindshiftsl@mindshiftsl.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
+    <img id="lightboxImg" src="" alt="" />
+  </div>
+
+  <script>
+    // ── Live demo: click-to-load Unity WebGL, scaled to fit ──
+    var stage  = document.getElementById('demoStage');
+    var poster = document.getElementById('demoPoster');
+    var loaded = false;
+
+    function scaleDemo() {
+      var s = Math.min(1, stage.clientWidth / 960);
+      stage.style.setProperty('--s', s);
+      stage.style.height = (600 * s) + 'px';
+    }
+    // Size the poster stage before the demo loads (keeps a 960:600 box).
+    scaleDemo();
+    window.addEventListener('resize', scaleDemo);
+
+    poster.addEventListener('click', function () {
+      if (loaded) return;
+      loaded = true;
+      var frame = document.createElement('iframe');
+      frame.src = 'Demo/index.html';
+      frame.title = 'Ya.LivingGlass interactive demo';
+      frame.allow = 'fullscreen; autoplay';
+      stage.appendChild(frame);
+      scaleDemo();
+      poster.style.opacity = '0';
+      setTimeout(function () { poster.remove(); }, 400);
+    });
+
+    // ── Lightbox ──
+    var lb      = document.getElementById('lightbox');
+    var lbImg   = document.getElementById('lightboxImg');
+    var lbClose = document.getElementById('lightboxClose');
+
+    document.querySelectorAll('.shot').forEach(function (img) {
+      img.addEventListener('click', function () {
+        lbImg.src = img.src;
+        lbImg.alt = img.alt;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeLightbox() {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    lb.addEventListener('click', closeLightbox);
+    lbClose.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+</html>
